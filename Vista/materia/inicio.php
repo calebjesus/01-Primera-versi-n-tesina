@@ -46,12 +46,12 @@ document.title = "Inicio materia prima"; // Cambiamos el título
             <td><?php echo $materia->MedidasMat; ?> </td>
             <td><?php echo $materia->TipoMadera; ?> </td>
             <td><?php echo $materia->CantidadMat; ?> </td>
-            <td><?php echo $materia->PrecioMat; ?> </td>
+            <td>$<?php echo $materia->PrecioMat; ?> </td>
 
             <td>
                 <div class="btn-group" role="group" aria-label="">
                     <a href="?controlador=materia&accion=borrar&FolioMat=<?php echo $materia->FolioMat; ?>"
-                        class="btn btn-danger">Borrar</a>
+                        class="btn btn-danger" onclick="return ConfirmDelete()">Borrar</a>
                     <a href="?controlador=materia&accion=editar&FolioMat=<?php echo $materia->FolioMat; ?>"
                         class="btn btn-info">Actualizar</a>
                 </div>
@@ -65,3 +65,15 @@ document.title = "Inicio materia prima"; // Cambiamos el título
 
 <input type="hidden" id="SesionRol" value="<?php echo $_SESSION['rol'] ?>">
 <script src="Herramientas/JS/navBar.js"></script>
+
+<script type="text/javascript">
+function ConfirmDelete() {
+    var respuesta = confirm("¿Estás seguro de eliminar?");
+    if (respuesta == true) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+</script>

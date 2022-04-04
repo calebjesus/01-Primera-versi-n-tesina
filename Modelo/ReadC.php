@@ -1,5 +1,6 @@
 <?php
-
+/*La clase ReadC cumple con la función de procesar todas operaciones del cliente incluyendo las operacioes 
+de citas, apartado, cuenta y listas, entre otras herramientas. */
 class ReadC{
 
     public $IdCliente;
@@ -63,8 +64,8 @@ primaria del cliente.*/
         $sql2= $conexion->prepare("SELECT * FROM carritotemporal WHERE FolioProd=? and  IdCliente=? and Estatus = 1;");
         $sql2->execute(array($FolioProd,$IdCliente));   
         $prod2=$sql2->fetch();
-        $idCarrito=$prod2['idCarritoTemporal'];
-
+       
+        
         //Ver cantidad
         $sql= $conexion->prepare("SELECT * FROM catalogoProducto WHERE FolioProd=?");
         $sql->execute(array($FolioProd));   
@@ -84,7 +85,8 @@ primaria del cliente.*/
                 echo "<div class='container2'><span class='estiloError'> ya no hay productos</span></div>";
             }
         }else{
-            $sql= $conexion->prepare("UPDATE  carritotemporal SET Cantidad=(Cantidad+1) WHERE idCarritoTemporal=?;");
+            $idCarrito = $prod2['idCarritoTemporal'];
+            $sql= $conexion->prepare("UPDATE carritotemporal SET Cantidad=(Cantidad+1) WHERE idCarritoTemporal=?;");
             $sql->execute(array($idCarrito));
             
         }
@@ -124,13 +126,9 @@ primaria del cliente.*/
 
             return $prod['precioTotal'];  
     }
-
-
-
-
-
-
+/*Ingresa los datos a la tabla apartado obteniendo el precio total y el id del cliente*/
     public static function insertar_apartado($PrecioTotal,$IdCliente){
+       /*Obtiene la fecha actual*/
         date_default_timezone_set('UTC');
         date_default_timezone_set("America/Mexico_City");
         setlocale(LC_TIME, 'spanish');    
@@ -161,10 +159,11 @@ primaria del cliente.*/
 
     }
 
+/*Ingresa los datos a la tabla apartaco producto obteniendo el id del cliente y el folio de la tabla apartado*/    
     public static function insertar_apartado_producto($IdCliente,$folio_apartado){
         
         $conexion=Basededatos::CreateInstancia();
-        
+        /*Se buscan los datos de la tabla carrito temporal para después ingresarlos*/
         $sql= $conexion->prepare("SELECT idCarritoTemporal, carritotemporal.folioprod, carritotemporal.cantidad, Catalogoproducto.precio
         from carritotemporal
         INNER JOIN Catalogoproducto ON Catalogoproducto.FolioProd = carritotemporal.FolioProd
@@ -184,6 +183,7 @@ primaria del cliente.*/
             }
     }
 
+/*Función SQL para ingresar los datos de la cita */
     public static function crear_cita($fecha_hora,$asunto,$lugar_cita,$IdCliente){
         $conexion=Basededatos::CreateInstancia();
             $sql= $conexion->prepare("INSERT into Citas(
@@ -193,11 +193,10 @@ primaria del cliente.*/
                 asunto) 
                 values(?,?,?,?)");
             $sql->execute(array($IdCliente, $fecha_hora, $lugar_cita, $asunto));
-            
     }
-    
+
+/*Función para obtener las fechas ocupadas de las citas devuelve un arreglo*/
     public static function fechas_ocupadas(){
-        
         $conexion=BasedeDatos::CreateInstancia();
         $sql= $conexion->query("SELECT fecha_hora_cita from citas");
             $lista_fechas=[];
@@ -205,9 +204,9 @@ primaria del cliente.*/
                 array_push($lista_fechas, '"'.$prod['fecha_hora_cita'].'",'  );
                 }
         return $lista_fechas;
-
     }
 
+/*Función para extraer los datos del carrito temporal e insertarlo en las tablas de apartado, devuelve un arreglo*/
     public static function buscarP($IdCliente){
         $conexion=Basededatos::CreateInstancia();
             $sql= $conexion->prepare("SELECT idCarritotemporal, NombreProd,Medidas,(Precio*CarritoTemporal.Cantidad) as Precio ,CarritoTemporal.Cantidad from carritotemporal   
@@ -229,15 +228,13 @@ primaria del cliente.*/
                 return $res;    
     }   
 
+/*Función para buscar si el cliente tiene un cita*/
     public static function control_cita($IdCliente){
-
         $conexion2=Basededatos::CreateInstancia();
         $sql2= $conexion2->prepare("select * from citas where IdCliente=?");
         $sql2->execute(array($IdCliente));
         $clien=$sql2->fetch(PDO::FETCH_NUM);
-
         if($clien == true){
-
             return 1;
             echo("ya pidio una cita");
         }else{
@@ -247,8 +244,9 @@ primaria del cliente.*/
         
     }
 
+/*Función para eliminar la cita del cliente una vez que haya pasado el tiempo de la ultima cita */
     public static function eliminar_cita($IdCliente){
-
+        /*Se extrae la fecha actual del sistema*/
         date_default_timezone_set('UTC');
         date_default_timezone_set("America/Mexico_City");
         setlocale(LC_TIME, 'spanish');   
@@ -258,29 +256,28 @@ primaria del cliente.*/
         $sql= $conexion->prepare("SELECT fecha_hora_cita from citas where IdCliente = ?");
         $sql->execute(array($IdCliente));
         $prod=$sql->fetch();
-        $fecha_anterior = date("Y-m-d", strtotime($prod['fecha_hora_cita']));
 
-        
-        
-
-        if($fecha_actual > $fecha_anterior){         
-  
-        $conexion=Basededatos::CreateInstancia();
-        $sql= $conexion->prepare("DELETE FROM citas WHERE IdCliente=?");
-        $sql->execute(array($IdCliente));
+        if(!empty($prod['fecha_hora_cita'])){
+            $fecha_anterior = date("Y-m-d", strtotime($prod['fecha_hora_cita']));
+            if($fecha_actual > $fecha_anterior){         
+            $conexion=Basededatos::CreateInstancia();
+            $sql= $conexion->prepare("DELETE FROM citas WHERE IdCliente=?");
+            $sql->execute(array($IdCliente));
+            }
         }
+
+        
 
     }
 
+/*Busca todos los atributos de la tabla apartado por un cliente*/
     public static function buscar_productos_apartado($IdCliente){
         $conexion=Basededatos::CreateInstancia();
             $sql= $conexion->prepare("SELECT FolioApartado, Fecha, FechaVencimiento, PrecioTotal
             from apartado
             where IdCliente = ?");
             $sql->execute(array($IdCliente));
-            //$prod=$sql->fetch();
             $res=[];
-                //for ($x = 0; $x < count($prod); $x++) {
                 foreach ($sql->fetchALL() as $prod) {
                     $obj = new stdClass();
                     $obj->FolioApartado = $prod['FolioApartado'];
@@ -291,7 +288,8 @@ primaria del cliente.*/
                 }
         return $res;   
     }
-    
+
+/*La función apartado_producto_detalles busca los tributos de la tabla apartado producto para enviarlo a detalles de los productos*/
     public static function apartado_producto_detalles($salida){
         $conexion=Basededatos::CreateInstancia();
             $sql= $conexion->prepare("SELECT NombreProd, apartadoproducto.Cantidad, PrecioTotal 
@@ -309,27 +307,20 @@ primaria del cliente.*/
                 }
         return $res;   
     }
-
+    
+/*La función datos_cita busca los atributos en la tabla cita por el id del cliente para mostrarlo en la opción cuenta y listas */
     public static function datos_cita($IdCliente){
         $conexion=Basededatos::CreateInstancia();
-            $sql= $conexion->prepare("SELECT * from citas where IdCliente=?");
+            $sql= $conexion->prepare("SELECT * from citas where IdCliente=?;");
             $sql->execute(array($IdCliente));
-            $prod=$sql->fetch();
             $res=[];
-                //for ($x = 0; $x < count($prod); $x++) {
-                
-                    $obj = new stdClass();
-                    
-                    $obj->fecha_hora_cita = $prod['fecha_hora_cita'];
-                    $obj->lugar_cita = $prod['lugar_cita'];
-                    $obj->asunto = $prod['asunto'];
+            foreach ($sql->fetchALL() as $prod) {
                     array_push($res,$prod['fecha_hora_cita'],$prod['lugar_cita'],$prod['asunto']);
-                
+            }
         return $res;   
-        
-
     } 
 
+/*La función verifica la cantidad disponible al momento  de que el cliente aparte un producto retornando valores 0 y 1 para validar la cantidad que el cliente pide y la que hay en existencia  */ 
     public static function verificar_cantidad($IdCliente){
         $conexion=Basededatos::CreateInstancia();
             $sql= $conexion->prepare("SELECT nombreprod, catalogoproducto.cantidad as cantidad_dispobible, 
@@ -342,13 +333,11 @@ primaria del cliente.*/
             $res=[];
                 
                 foreach ($sql->fetchALL() as $prod) {
-                    //validar la cantidad
                     $obj = new stdClass();
                     $obj->nombreprod = $prod['nombreprod'];
                     $obj->cantidad_dispobible = $prod['cantidad_dispobible'];
                     $obj->validacion = $prod['validacion'];
                     array_push($res, $obj);
-
                     if($prod['validacion'] == 1 ){
                         echo "<div class='container2'><span class='estiloError'>
                         No hay suficiente mercancia para {$prod['nombreprod']} solo hay {$prod['cantidad_dispobible']} productos disponibles 
@@ -362,8 +351,8 @@ primaria del cliente.*/
 
     }
 
+/*Elimina las cantidad que hay de productos en la tabla catalogoproductos por cada vez que el cliente aparte productos*/
     public static function eliminar_cantidades($folio_apartado){
-
         $conexion=Basededatos::CreateInstancia();
         $sql= $conexion->prepare("SELECT Folioprod, cantidad
         FROM apartado
@@ -372,13 +361,109 @@ primaria del cliente.*/
         $sql->execute(array($folio_apartado));
         $res=[];
             foreach ($sql->fetchALL() as $prod) {
-                //validar la cantidad
                 $conexion=Basededatos::CreateInstancia();
                 $sql= $conexion->prepare("UPDATE  catalogoproducto SET Cantidad=Cantidad-?  WHERE FolioProd = ?");
                 $sql->execute(array($prod['cantidad'],$prod['Folioprod']));
             }
+    } 
+//Selecion de el municipio
+    public static function datos_municipios(){
+        $conexion=Basededatos::CreateInstancia();
+            $sql= $conexion->query("SELECT municipio, estado from municipios;");
+            $res=[];
+                foreach ($sql->fetchALL() as $prod){
+                    $obj = new stdClass();
+                    $obj->municipio = $prod['municipio'];
+                    $obj->estado = $prod['estado'];
+                    array_push($res, $obj);
+                }
+        return $res;
     }
+    //Selecion de el municipio
+    public static function datos_estado(){
+        $conexion=Basededatos::CreateInstancia();
+            $sql= $conexion->query("SELECT DISTINCT municipio from municipios;");
+            $res=[];
+                foreach ($sql->fetchALL() as $prod){
+                    $obj = new stdClass();
+                    $obj->municipio = $prod['municipio'];
+                    array_push($res, $obj);
+                }
+        return $res;
+    }
+
+    public static function verificar_inyeccionSQL($cadena_de_texto){
+        $c1= 'select';
+        $c2= 'update';
+        $c3= 'delete';
+        $c4= 'create';
+        $c9= 'drop';
+        $c10= 'table';
+        $c11= 'transact';
+        $c12= 'alter';
+        $c13= 'where';
+        $c14= 'name';
+        $c15= 'from';
+        $c16= 'database';
+        $c17= 'use';
+        $c18= 'for';
+        $c19= 'set';
+        $c20= 'values';
+        $c23= 'mysql';
+        $c24= 'user';
+        $c25= 'into';
+        $c26= 'insert';
+
+        $p1 = strripos($cadena_de_texto, $c1);
+        $p2 = strripos($cadena_de_texto, $c2);
+        $p3 = strripos($cadena_de_texto, $c3);
+        $p4 = strripos($cadena_de_texto, $c4);
+        $p9 = strripos($cadena_de_texto, $c9);
+        $p10 = strripos($cadena_de_texto, $c10);
+        $p11 = strripos($cadena_de_texto, $c11);
+        $p12 = strripos($cadena_de_texto, $c12);
+        $p13 = strripos($cadena_de_texto, $c13);
+        $p14 = strripos($cadena_de_texto, $c14);
+        $p15 = strripos($cadena_de_texto, $c15);
+        $p16 = strripos($cadena_de_texto, $c16);
+        $p17 = strripos($cadena_de_texto, $c17);
+        $p18 = strripos($cadena_de_texto, $c18);
+        $p19 = strripos($cadena_de_texto, $c19);
+        $p20 = strripos($cadena_de_texto, $c20);
+        $p23 = strripos($cadena_de_texto, $c23);
+        $p24 = strripos($cadena_de_texto, $c24);
+        $p25 = strripos($cadena_de_texto, $c25);
+        $p26 = strripos($cadena_de_texto, $c26);
+        //se puede hacer la comparacion con 'false' o 'true' y los comparadores '===' o '!=='
+        if (
+            $p1 === false &&
+            $p2 === false &&
+            $p3 === false &&
+            $p4 === false &&
+            $p9 === false &&
+            $p10 === false &&
+            $p11 === false &&
+            $p12 === false &&
+            $p13 === false &&
+            $p14 === false &&
+            $p15 === false &&
+            $p16 === false &&
+            $p17 === false &&
+            $p18 === false &&
+            $p19 === false &&
+            $p20 === false &&
+            $p23 === false &&
+            $p24 === false &&
+            $p25 === false &&
+            $p26 === false
+        ) {
             
+            return 0;
+            } else {
+                   
+                    return 1;
+                    }
+    }
 }
 
 ?>

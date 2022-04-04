@@ -8,8 +8,6 @@ class BuscarP{
     public $Cantidad;
     public $idCarritoTemporal;
 
-  
-
     public function __construct($idCarritoTemporal,$NombreProd,$Medidas, $Precio, $Cantidad){
         $this->idCarritoTemporal=$idCarritoTemporal;
         $this->NombreProd=$NombreProd;

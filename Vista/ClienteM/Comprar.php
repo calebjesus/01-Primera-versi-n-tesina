@@ -77,7 +77,7 @@ document.title = "Realizar compra";
 
                     <div class="mb-3">
                         <label for="" class="form-label">Cantidad:</label>
-                        <input name="CantidadMat" id="CantidadMat" type="Number" onkeypress="return valideKey(event);"
+                        <input name="CantidadMat" id="CantidadMat" type="Number" min="1" onkeypress="return valideKey(event);"
                             class="form-control" aria-describedby="helpId" placeholder="Cantidad">
                     </div>
 

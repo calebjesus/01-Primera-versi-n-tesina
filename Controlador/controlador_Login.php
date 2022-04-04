@@ -12,35 +12,49 @@
 include_once("conexion.php");
 include_once("Modelo/Login.php");
 include_once("Modelo/cliente.php");
+include_once("Modelo/ReadC.php");
+
 Basededatos::CreateInstancia();
 
 
 class ControladorLogin{
-
+    //Muestra la página de inicio del sistema
     public function inicio(){ 
- 
         include_once("Vista/Login/inicio.php");
     }
 
+    //Valida al usuario que inicia sesión
     public function validarLogin(){ 
-
         if($_POST){
             $usuario=$_POST['usuario'];
             $pass=$_POST['pass'];
-        
-            Login::buscar($usuario, $pass);
+
+            $cadena_de_texto =  $usuario." ".$pass;
+            if(ReadC::verificar_inyeccionSQL($cadena_de_texto)==1){
+                echo('
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+            ¡Estas insertando palabras reservadas!
+            </div>
+            </div>');
+            }else{
+                Login::buscar($usuario, $pass);
+            }
+            
         }
         include_once("Vista/Login/inicio.php");
     }
 
+    //Destruye la sesión iniciada
     public function cerrar(){
         session_start();
         session_unset();
         session_destroy();
         include_once("Vista/Login/inicio.php");
-
     }
 
+    //Recibe los datos y los envía al modelo para realizar el registro del cliente
     public function registro(){
         if($_POST){
             $NombreClien=$_POST['NombreClien'];
@@ -51,31 +65,44 @@ class ControladorLogin{
             $Direccion=$_POST['Direccion'];
             $CorreoElectronico=$_POST['CorreoElectronico'];
             $Contrasena=$_POST['Contrasena'];
+            $contraseñaHash = password_hash($Contrasena, PASSWORD_DEFAULT); 
+
             $rol=2;
 
-            
-
-            if(Cliente::verifedad($FechaNacimiento)<=17){
+            $cadena_de_texto =  $NombreClien." ".$APClien." ". $AMClien." ".$Direccion." ".$CorreoElectronico." ".$Contrasena;
+            if(ReadC::verificar_inyeccionSQL($cadena_de_texto)==1){
                 echo('
-            <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
             <div>
-            ¡Necesitas ser mayor de edad!
+            ¡Estas insertando palabras reservadas!
             </div>
             </div>');
-
             }else{
-                Cliente::crear(
-                    $NombreClien, 
-                    $APClien, 
-                    $AMClien, 
-                    $FechaNacimiento, 
-                    $Telefono, 
-                    $Direccion, 
-                    $CorreoElectronico, 
-                    $Contrasena,
-                    $rol);
+                if(Cliente::verifedad($FechaNacimiento)<=17){
+                    echo('
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <div>
+                    ¡Necesitas ser mayor de edad!
+                    </div>
+                    </div>');
+    
+                }else{
+                    Cliente::crear(
+                        $NombreClien, 
+                        $APClien, 
+                        $AMClien, 
+                        $FechaNacimiento, 
+                        $Telefono, 
+                        $Direccion, 
+                        $CorreoElectronico, 
+                        $contraseñaHash,
+                        $rol);
+                }
             }
+
+            
 
             
 

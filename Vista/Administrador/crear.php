@@ -24,31 +24,38 @@ document.title = "Crear administrador"; // Cambiamos el título
             <div class="mb-3">
                 <label for="" class="form-label">Nombre:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control" name="Nombre"
-                    id="Nombre" aria-describedby="helpId" placeholder="Nombre del administrador">
+                    id="Nombre" aria-describedby="helpId" placeholder="Nombre del administrador"
+                    value="<?php if (isset($_POST['Nombre'])) echo $_POST['Nombre'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Apellido paterno:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="APAdmin" id="APAdmin" aria-describedby="helpId" placeholder="Apellido paterno">
+                    name="APAdmin" id="APAdmin" aria-describedby="helpId" placeholder="Apellido paterno"
+                    value="<?php if (isset($_POST['APAdmin'])) echo $_POST['APAdmin'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Apellido materno:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="AMAdmin" id="AMAdmin" aria-describedby="helpId" placeholder="Apellido materno">
+                    name="AMAdmin" id="AMAdmin" aria-describedby="helpId" placeholder="Apellido materno"
+                    value="<?php if (isset($_POST['AMAdmin'])) echo $_POST['AMAdmin'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Correo electrónico:</label>
-                <input type="text" required="" class="form-control" name="CorreoElectronico" id="CorreoElectronico"
-                    aria-describedby="helpId" placeholder="Ejem. (usuario@gmail.com)">
+                <input type="email"
+                pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"  
+                required="" class="form-control" name="CorreoElectronico" id="CorreoElectronico"
+                    aria-describedby="helpId" placeholder="Ejem. (usuario@gmail.com)"
+                    value="<?php if (isset($_POST['CorreoElectronico'])) echo $_POST['CorreoElectronico'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Contraseña:</label>
-                <input type="text" required="" class="form-control" name="Contrasena" id="Contrasena"
-                    aria-describedby="helpId" placeholder="Contraseña">
+                <input type="password" required="" class="form-control" name="Contrasena" id="Contrasena"
+                    aria-describedby="helpId" placeholder="Contraseña"
+                    value="<?php if (isset($_POST['Contrasena'])) echo $_POST['Contrasena'];?>" >
             </div>
 
             <input name="" id="" class="btn btn-success" type="submit" value="Crear">

@@ -8,7 +8,7 @@
         }
     }
 
-    var_dump($_SESSION['id']);
+    
 ?>
 <div class="card">
 

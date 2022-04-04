@@ -56,7 +56,7 @@ document.title = "Inicio empleado"; // Cambiamos el título
             <td>
                 <div class="btn-group" role="group" aria-label="">
                     <a href="?controlador=empleados&accion=borrar&IdEmpleados=<?php echo $empleado->IdEmpleados; ?>"
-                        class="btn btn-danger">Borrar</a>
+                        class="btn btn-danger" onclick="return ConfirmDelete()">Borrar</a>
                     <a href="?controlador=empleados&accion=editar&IdEmpleados=<?php echo $empleado->IdEmpleados; ?>"
                         class="btn btn-info">Actualizar</a>
                 </div>
@@ -73,3 +73,17 @@ document.title = "Inicio empleado"; // Cambiamos el título
 
 <input type="hidden" id="SesionRol" value="<?php echo $_SESSION['rol'] ?>">
 <script src="Herramientas/JS/navBar.js"></script>
+
+<script type="text/javascript">
+    function ConfirmDelete() {
+        var respuesta = confirm("¿Estás seguro de eliminar?");
+        if(respuesta == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
+    }
+
+</script>

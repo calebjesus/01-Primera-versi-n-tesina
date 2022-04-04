@@ -30,7 +30,8 @@ document.title = "Crear Cita"; // Cambiamos el título
     <div class="card-footer text-muted">
         <form action="" method="post" enctype="multipart/form-data">
             <br>
-            <input id="fechas" name="fechas" required="" type="date" placeholder="Fechas disponibles">
+            <input id="fechas" name="fechas" required="" type="date" placeholder="Fechas disponibles"
+            value="<?php if (isset($_POST['fechas'])) echo $_POST['fechas'];?>">
             <br>
 
 
@@ -42,75 +43,51 @@ document.title = "Crear Cita"; // Cambiamos el título
             <div class="mb-3">
                 <label for="" class="form-label">¿Cómo podemos ayudarte?:</label>
                 <input type="text" required="" class="form-control" name="asunto" id="asunto" aria-describedby="helpId"
-                    placeholder="Escribe aquí… ">
+                    placeholder="Escribe aquí… "
+                    value="<?php if (isset($_POST['asunto'])) echo $_POST['asunto'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Unico estado en el trabajamos, disculpe las molestias.</label>
-                <input type="text" readonly required="" class="form-control" name="estado" id="estado"
-                    aria-describedby="helpId" value="Morelos" placeholder="Escribe aquí… ">
+                    <select id="estado" name="estado" class="form-select" aria-label="Default select example">
+                    <?php
+                        foreach($datos_estado as $option){
+                            echo "<option value=$option->municipio >".$option->municipio."</option>";
+                        }
+                    ?>
+                    <option  selected="selected"  value="<?php if (isset($_POST['estado'])) echo $_POST['estado'];?>"><?php if (isset($_POST['estado'])) echo $_POST['estado'];?> </option>
+                </select>
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Selecciona tu municipio:</label>
-                <select required="" id="municipio" name="municipio" class="form-select"
-                    aria-label="Default select example">
-
-                    <option value="">Seleccione uno...</option>
-                    <option value="	Amacuzac	"> Amacuzac </option>
-                    <option value="	Atlatlahucan	"> Atlatlahucan </option>
-                    <option value="	Axochiapan	"> Axochiapan </option>
-                    <option value="	Ayala	"> Ayala </option>
-                    <option value="	Coatlán del Río	"> Coatlán del Río </option>
-                    <option value="	Cuautla	"> Cuautla </option>
-                    <option value="	Cuernavaca	"> Cuernavaca </option>
-                    <option value="	Emiliano Zapata	"> Emiliano Zapata </option>
-                    <option value="	Huitzilac	"> Huitzilac </option>
-                    <option value="	Jantetelco	"> Jantetelco </option>
-                    <option value="	Jiutepec	"> Jiutepec </option>
-                    <option value="	Jojutla	"> Jojutla </option>
-                    <option value="	Jonacatepec de Leandro Valle	"> Jonacatepec de Leandro Valle </option>
-                    <option value="	Mazatepec	"> Mazatepec </option>
-                    <option value="	Miacatlán	"> Miacatlán </option>
-                    <option value="	Ocuituco	"> Ocuituco </option>
-                    <option value="	Puente de Ixtla	"> Puente de Ixtla </option>
-                    <option value="	Temixco	"> Temixco </option>
-                    <option value="	Tepalcingo	"> Tepalcingo </option>
-                    <option value="	Tepoztlán	"> Tepoztlán </option>
-                    <option value="	Tetecala	"> Tetecala </option>
-                    <option value="	Tetela del Volcán	"> Tetela del Volcán </option>
-                    <option value="	Tlalnepantla	"> Tlalnepantla </option>
-                    <option value="	Tlaltizapán de Zapata	"> Tlaltizapán de Zapata </option>
-                    <option value="	Tlaquiltenango	"> Tlaquiltenango </option>
-                    <option value="	Tlayacapan	"> Tlayacapan </option>
-                    <option value="	Totolapan	"> Totolapan </option>
-                    <option value="	Xochitepec	"> Xochitepec </option>
-                    <option value="	Yautepec	"> Yautepec </option>
-                    <option value="	Yecapixtla	"> Yecapixtla </option>
-                    <option value="	Zacatepec	"> Zacatepec </option>
-                    <option value="	Zacualpan de Amilpas	"> Zacualpan de Amilpas </option>
-                    <option value="	Temoac	"> Temoac </option>
-                    <option value="	Coatetelco	"> Coatetelco </option>
-                    <option value="	Xoxocotla	"> Xoxocotla </option>
-                    <option value="	Hueyapan	"> Hueyapan </option>
+                <select id="municipio" name="municipio" class="form-select" aria-label="Default select example">
+                    <option  value= "">Municipios</option>
+                    <?php
+                        foreach($datos_municipios as $option){
+                            echo "<option value=$option->estado >".$option->estado."</option>";
+                        }
+                    ?>
+                    <option  selected="selected"  value="<?php if (isset($_POST['municipio'])) echo $_POST['municipio'];?>"><?php if (isset($_POST['municipio'])) echo $_POST['municipio'];?> </option>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Ingresa tu colonia:</label>
                 <input type="text" required="" class="form-control" name="colonia" id="colonia"
-                    aria-describedby="helpId" placeholder="Escribe aquí… ">
+                    aria-describedby="helpId" placeholder="Escribe aquí… " 
+                    value="<?php if (isset($_POST['colonia'])) echo $_POST['colonia'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Ingresa calle, N. int. y N. ext.:</label>
                 <input type="text" required="" class="form-control" name="calle" id="calle" aria-describedby="helpId"
-                    placeholder="Ejemplo (Azteca, 12, 15)">
+                    placeholder="Ejemplo (Azteca, 12, 15)"
+                    value="<?php if (isset($_POST['calle'])) echo $_POST['calle'];?>">
             </div>
 
 
             <input class="btn btn-success" type="submit" value="Crear">
-            <a href="?controlador=ReadC&accion=enviar_fechas_ocupadas" class="btn btn-danger">fechas</a>
         </form>
 
     </div>
@@ -124,11 +101,11 @@ document.title = "Crear Cita"; // Cambiamos el título
 config = {
 
     disable: [<?php echo(ControladorVC::enviar_fechas_ocupadas());?>],
-    inline: true,
+
     minDate: "today",
     enableTime: true,
-    altInput: true,
-    altFormat: "l j F Y, H:i",
+    minTime: "9:00",
+    maxTime: "17:00",
     dateFormat: "Y-m-d H:i",
     locale: {
         firstDayOfWeek: 1,

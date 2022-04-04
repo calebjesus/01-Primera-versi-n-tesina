@@ -9,33 +9,33 @@
     }
 ?>
 <br>
-        <div class="d-grid gap-2">
-            <a name="" id="" class="btn btn-success" href="?controlador=ReadC&accion=cuenta_listas" >Regresar</a>
-        </div>
+<div class="d-grid gap-2">
+    <a name="" id="" class="btn btn-success" href="?controlador=ReadC&accion=cuenta_listas">Regresar</a>
+</div>
 <br>
 <br>
-        <table  class="table table-success table-striped table-hover" style="width:100%">
+<table class="table table-success table-striped table-hover" style="width:100%">
 
-            <tr>
+    <tr>
 
-                <th>Nombre</th>
-                <th>Cantidad</th>
-                <th>PrecioTotal</th>
-            </tr>
-            </thead>
-            <tbody>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Precio Total</th>
+    </tr>
+    </thead>
+    <tbody>
 
-                <?php 
+        <?php 
             foreach ($prods as $prod){?>
-                <tr>
-                    <td><?php echo $prod->NombreProd; ?> </td>
-                    <td><?php echo $prod->Cantidad;?> </td>
-                    <td><?php echo $prod->PrecioTotal;?> </td>
-                </tr>
+        <tr>
+            <td><?php echo $prod->NombreProd; ?> </td>
+            <td><?php echo $prod->Cantidad;?> </td>
+            <td>$<?php echo $prod->PrecioTotal * $prod->Cantidad;?> </td>
+        </tr>
 
-                <?php  } ?>
-            </tbody>
-        </table>
+        <?php  } ?>
+    </tbody>
+</table>
 
 <input type="hidden" id="SesionRol" value="<?php echo $_SESSION['rol'] ?>">
 <script src="Herramientas/JS/navBar.js"></script>

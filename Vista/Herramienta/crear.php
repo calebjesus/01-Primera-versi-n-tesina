@@ -23,25 +23,29 @@ document.title = "Crear herramienta";
             <div class="mb-3">
                 <label for="" class="form-label">Nombre:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="NombreHerra" id="NombreHerra" aria-describedby="helpId" placeholder="Ejem.(Martillo)">
+                    name="NombreHerra" id="NombreHerra" aria-describedby="helpId" placeholder="Ejem.(Martillo)"
+                    value="<?php if (isset($_POST['NombreHerra'])) echo $_POST['NombreHerra'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Cantidad:</label>
                 <input type="text" required="" onkeypress="return valideKey(event);" class="form-control"
-                    name="Cantidad" id="Cantidad" aria-describedby="helpId" placeholder="Ejem.(10)">
+                    name="Cantidad" id="Cantidad" aria-describedby="helpId" placeholder="Ejem.(10)"
+                    value="<?php if (isset($_POST['Cantidad'])) echo $_POST['Cantidad'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Precio:</label>
                 <input type="number" required="" min="0" step="0.05" class="form-control" name="PrecioHerra"
-                    id="PrecioHerra" aria-describedby="helpId" placeholder="000.00">
+                    id="PrecioHerra" aria-describedby="helpId" placeholder="000.00"
+                    value="<?php if (isset($_POST['PrecioHerra'])) echo $_POST['PrecioHerra'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Especificaciones:</label>
                 <input type="text" required="" class="form-control" name="Especificaciones" id="Especificaciones"
-                    aria-describedby="helpId" placeholder="Especificaciones">
+                    aria-describedby="helpId" placeholder="Especificaciones"
+                    value="<?php if (isset($_POST['NombreHerra'])) echo $_POST['NombreHerra'];?>">
             </div>
 
             <input name="" id="" class="btn btn-success" type="submit" value="Crear">

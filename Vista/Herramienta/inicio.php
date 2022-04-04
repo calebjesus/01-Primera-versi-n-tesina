@@ -42,13 +42,13 @@ document.title = "Inicio herramienta"; // Cambiamos el título
             <td><?php echo $herramienta->FolioHerra; ?> </td>
             <td><?php echo $herramienta->NombreHerra; ?> </td>
             <td><?php echo $herramienta->Cantidad; ?> </td>
-            <td><?php echo $herramienta->PrecioHerra; ?> </td>
+            <td>$<?php echo $herramienta->PrecioHerra; ?> </td>
             <td><?php echo $herramienta->Especificaciones; ?> </td>
 
             <td>
                 <div class="btn-group" role="group" aria-label="">
                     <a href="?controlador=herramienta&accion=borrar&FolioHerra=<?php echo $herramienta->FolioHerra; ?>"
-                        class="btn btn-danger">Borrar</a>
+                        class="btn btn-danger" onclick="return ConfirmDelete()">Borrar</a>
                     <a href="?controlador=herramienta&accion=editar&FolioHerra=<?php echo $herramienta->FolioHerra; ?>"
                         class="btn btn-info">Actualizar</a>
                 </div>
@@ -65,3 +65,15 @@ document.title = "Inicio herramienta"; // Cambiamos el título
 
 <input type="hidden" id="SesionRol" value="<?php echo $_SESSION['rol'] ?>">
 <script src="Herramientas/JS/navBar.js"></script>
+
+<script type="text/javascript">
+function ConfirmDelete() {
+    var respuesta = confirm("¿Estás seguro de eliminar?");
+    if (respuesta == true) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+</script>

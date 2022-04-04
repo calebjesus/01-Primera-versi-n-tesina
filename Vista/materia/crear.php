@@ -23,38 +23,44 @@ document.title = "Crear materia";
             <div class="mb-3">
                 <label for="" class="form-label">Nombre:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="NombreMat" id="NombreMat" aria-describedby="helpId" placeholder="Nombre">
+                    name="NombreMat" id="NombreMat" aria-describedby="helpId" placeholder="Nombre"
+                    value="<?php if (isset($_POST['NombreMat'])) echo $_POST['NombreMat'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Nombre de la sucursal:</label>
                 <input type="text" required="" class="form-control" name="NombreSuc" id="NombreSuc"
-                    aria-describedby="helpId" placeholder="sucursal">
+                    aria-describedby="helpId" placeholder="sucursal"
+                    value="<?php if (isset($_POST['NombreSuc'])) echo $_POST['NombreSuc'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Medidas:</label>
                 <input type="text" required="" class="form-control" name="MedidasMat" id="MedidasMat"
-                    aria-describedby="helpId" placeholder="Ejem.(Largo*Ancho*Alto)">
+                    aria-describedby="helpId" placeholder="Ejem.(Largo*Ancho*Alto)"
+                    value="<?php if (isset($_POST['MedidasMat'])) echo $_POST['MedidasMat'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Tipo de madera:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="TipoMadera" id="TipoMadera" aria-describedby="helpId" placeholder="Tipo">
+                    name="TipoMadera" id="TipoMadera" aria-describedby="helpId" placeholder="Tipo"
+                    value="<?php if (isset($_POST['TipoMadera'])) echo $_POST['TipoMadera'];?>">
             </div>
 
 
             <div class="mb-3">
                 <label for="" class="form-label">Cantidad:</label>
                 <input type="Number" required="" onkeypress="return valideKey(event);" class="form-control"
-                    name="CantidadMat" id="CantidadMat" aria-describedby="helpId" placeholder="Cantidad">
+                    name="CantidadMat" id="CantidadMat" aria-describedby="helpId" placeholder="Cantidad"
+                    value="<?php if (isset($_POST['CantidadMat'])) echo $_POST['CantidadMat'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Precio:</label>
                 <input type="number" required="" min="0" step="0.05" class="form-control" name="PrecioMat"
-                    id="PrecioMat" aria-describedby="helpId" placeholder="00.00">
+                    id="PrecioMat" aria-describedby="helpId" placeholder="00.00"
+                    value="<?php if (isset($_POST['PrecioMat'])) echo $_POST['PrecioMat'];?>">
             </div>
 
             <input name="" id="" class="btn btn-success" type="submit" value="Crear">

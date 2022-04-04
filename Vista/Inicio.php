@@ -78,18 +78,22 @@ Somos una empresa comprometida con nuestros clientes y productos siempre procura
       <br>
       Carpintería general S.A C.V © todos lo derechos reservados 2022
       <br>
-      <i class="fa fa-map-marker" aria-hidden="true"></i> Calle: Azteca 12, Colonia: Rancho nuevo Yautepec Morelos 62733
-      </p>
+      <?php 
+          foreach ($inicio as $inicios){?>
+      <i class="fa fa-map-marker" aria-hidden="true"></i><?php echo $inicios->direccion; ?>
+      
+    </p>
 </div>
       <div class="col-md-6">
         <p>
           <br> 
-          <i class="fa fa-address-book" aria-hidden="true"></i> (+52) 777 601 72 17
+          <i class="fa fa-address-book" aria-hidden="true"></i> <?php echo $inicios->telefono1?>
           <br>
-            <i class="fa fa-address-book" aria-hidden="true"></i> (+52) 777 206 50 74 
+            <i class="fa fa-address-book" aria-hidden="true"></i> <?php echo $inicios->telefono2?> 
           <br>
-          <i class="fa fa-envelope-open" aria-hidden="true"></i> adelfo197433@gmail.com
+          <i class="fa fa-envelope-open" aria-hidden="true"></i> <?php echo $inicios->correoelectroncio?>
           </p>
+          <?php  } ?>
       </div>
       </div>
 </div>

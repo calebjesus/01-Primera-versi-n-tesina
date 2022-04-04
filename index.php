@@ -8,7 +8,8 @@ if(isset($_GET['controlador']) && isset($_GET['accion']) ){
     ?>
 <script>
 // Aqui obtienes solo: http://localhost/CarpinteriaGral/
-console.log(window.location.href); 
+console.log(window.location.href);
+echo(window.location.href); 
 //Añadimos el controlador y accion
 window.history.replaceState({}, '', '?controlador=Principal&accion=mostrar');
 // Aqui obtienes: http://localhost/CarpinteriaGral/?controlador=Principal&accion=inicio

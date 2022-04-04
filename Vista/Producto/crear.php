@@ -25,38 +25,44 @@ document.title = "Crear producto"; // Cambiamos el título
             <div class="mb-3">
                 <label for="" class="form-label">Nombre:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="NombreProd" id="NombreProd" aria-describedby="helpId" placeholder="Nombre del Producto">
+                    name="NombreProd" id="NombreProd" aria-describedby="helpId" placeholder="Nombre del Producto"
+                    value="<?php if (isset($_POST['NombreProd'])) echo $_POST['NombreProd'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Medidas:</label>
                 <input type="text" required="" class="form-control" name="Medidas" id="Medidas"
-                    aria-describedby="helpId" placeholder="Ejem.(Largo*Ancho*Alto)">
+                    aria-describedby="helpId" placeholder="Ejem.(Largo*Ancho*Alto)"
+                    value="<?php if (isset($_POST['Medidas'])) echo $_POST['Medidas'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Categoría:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" onkeypress="return check(event);"
                     class="form-control" name="Categoria" id="Categoria" aria-describedby="helpId"
-                    placeholder="Categoría">
+                    placeholder="Categoría"
+                    value="<?php if (isset($_POST['Categoria'])) echo $_POST['Categoria'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Precio:</label>
                 <input type="number" required="" min="0" step="0.05" required="" class="form-control" name="Precio"
-                    id="Precio" aria-describedby="helpId" placeholder="00.00">
+                    id="Precio" aria-describedby="helpId" placeholder="00.00"
+                    value="<?php if (isset($_POST['Precio'])) echo $_POST['Precio'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Cantidad:</label>
                 <input type="text" onkeypress="return valideKey(event);" required="" class="form-control"
-                    name="Cantidad" id="Cantidad" aria-describedby="helpId" placeholder="Cantidad">
+                    name="Cantidad" id="Cantidad" aria-describedby="helpId" placeholder="Cantidad"
+                    value="<?php if (isset($_POST['Cantidad'])) echo $_POST['Cantidad'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Nombre de la imagen:</label>
                 <input type="text" required="" class="form-control" name="Nombreimg" id="Nombreimg"
-                    aria-describedby="helpId" placeholder="Nombre">
+                    aria-describedby="helpId" placeholder="Nombre"
+                    value="<?php if (isset($_POST['Nombreimg'])) echo $_POST['Nombreimg'];?>">
             </div>
 
             <div class="form-group">

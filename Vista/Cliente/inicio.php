@@ -18,9 +18,8 @@ document.title = "Inicio cliente"; // Cambiamos el título
 <div class="d-grid gap-2">
     <a name="" id="" class="btn btn-success" href="?controlador=cliente&accion=crear" role="">Crear cliente</a>
 </div>
-<p>
-
-</p>
+<br>
+<br>
 <table id="tabla" class="table table-hover" style="width:100%">
     <thead class="table-dark">
         <tr>
@@ -53,8 +52,8 @@ document.title = "Inicio cliente"; // Cambiamos el título
             <td><?php echo $cliente->Contrasena; ?> </td>
             <td>
                 <div class="btn-group" role="group" aria-label="">
-                    <a href="?controlador=Cliente&accion=borrar&IdCliente=<?php echo $cliente->IdCliente; ?>"
-                        class="btn btn-danger">Borrar</a>
+                    <a href="?controlador=Cliente&accion=borrar&IdCliente=<?php echo $cliente->IdCliente; ?>"class="btn btn-danger" onclick="return ConfirmDelete()">Borrar</a>
+
                     <a href="?controlador=Cliente&accion=editar&IdCliente=<?php echo $cliente->IdCliente; ?>"
                         class="btn btn-info">Actualizar</a>
                 </div>
@@ -69,5 +68,73 @@ document.title = "Inicio cliente"; // Cambiamos el título
     </tbody>
 </table>
 
+<br>
+<br>
+<div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div style="display: flex;    flex-direction: column;    justify-content: center;    align-items: center;">
+                <h1 class="display-1">Citas de clientes</h1>
+                </div>
+            </div>
+        </div>
+</div>
+<br>
+
+<table id="tabla2" class="table table-hover" style="width:100%">
+    <thead class="table-dark">
+        <tr>
+            <th>Folio</th>
+            <th>E-mail</th>
+            <th>Asunto</th>
+            <th>Fecha y hora</th>
+            <th>Lugar de la cita</th>
+            <th>      </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <?php
+    foreach ($citas as $cita){?>
+
+        <tr>
+            <td><?php echo $cita->folio_citas; ?> </td>
+            <td><?php echo $cita->asunto; ?> </td>
+            <td><?php echo $cita->correoelectronico; ?> </td>
+            <td><?php echo $cita->fecha_hora_cita; ?> </td>
+            <td><?php echo $cita->lugar_cita; ?> </td>
+            <td>
+                <form  method="post" enctype="multipart/form-data">           
+                <input type="hidden" value="<?php echo $cita->folio_citas;?>" class="form-control" name="folio_citas" id="folio_citas" aria-describedby="helpId">
+                <input class="btn btn-danger" type="submit" value="Eliminar" onclick="return ConfirmDelete()">
+                </form>
+            </td>
+        </tr>
+
+        <?php  } ?>
+
+
+
+
+    </tbody>
+</table>
+
+
+
+
+
 <input type="hidden" id="SesionRol" value="<?php echo $_SESSION['rol'] ?>">
 <script src="Herramientas/JS/navBar.js"></script>
+<script type="text/javascript">
+    function ConfirmDelete() {
+        var respuesta = confirm("¿Estás seguro de eliminar?");
+        if(respuesta == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
+    }
+
+</script>

@@ -23,54 +23,65 @@ document.title = "Crear empleado"; // Cambiamos el título
             <div class="mb-3">
                 <label for="" class="form-label">Nombre:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control" name="nombre"
-                    id="nombre" aria-describedby="helpId" placeholder="Nombre del empleado">
+                    id="nombre" aria-describedby="helpId" placeholder="Nombre del empleado"
+                    value="<?php if (isset($_POST['nombre'])) echo $_POST['nombre'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Apellido paterno:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control" name="APEmp"
-                    id="APEmp" aria-describedby="helpId" placeholder="Apellido paterno">
+                    id="APEmp" aria-describedby="helpId" placeholder="Apellido paterno"
+                    value="<?php if (isset($_POST['APEmp'])) echo $_POST['APEmp'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Apellido materno:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control" name="AMEmp"
-                    id="AMEmp" aria-describedby="helpId" placeholder="Apellido materno">
+                    id="AMEmp" aria-describedby="helpId" placeholder="Apellido materno"
+                    value="<?php if (isset($_POST['AMEmp'])) echo $_POST['AMEmp'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Ingresa la fecha de nacimiento:</label>
                 <input type="date" required="" class="form-control" name="FechaNacimiento" id="FechaNacimiento"
-                    aria-describedby="helpId" placeholder="Fecha">
+                    aria-describedby="helpId" placeholder="Fecha"
+                    value="<?php if (isset($_POST['FechaNacimiento'])) echo $_POST['FechaNacimiento'];?>">
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Teléfono:</label>
                 <input type="text" onkeypress="return valideKey(event);" required="" minlength="10" maxlength="10"
-                    class="form-control" name="Telefono" id="Telefono" aria-describedby="helpId" placeholder="Teléfono">
+                    class="form-control" name="Telefono" id="Telefono" aria-describedby="helpId" placeholder="Teléfono"
+                    value="<?php if (isset($_POST['Telefono'])) echo $_POST['Telefono'];?>" >
             </div>
 
 
             <div class="mb-3">
                 <label for="" class="form-label">Dirección:</label>
                 <input type="text" required="" class="form-control" name="Direccion" id="Direccion"
-                    aria-describedby="helpId" placeholder="Dirección">
+                    aria-describedby="helpId" placeholder="Dirección"
+                    value="<?php if (isset($_POST['Direccion'])) echo $_POST['Direccion'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Correo electronico:</label>
-                <input type="text" required="" class="form-control" name="CorreoElectronico" id="CorreoElectronico"
-                    aria-describedby="helpId" placeholder="Ejem. (usuario@gmail.com)">
+                <input type="email" required="" class="form-control" name="CorreoElectronico" id="CorreoElectronico"
+                    aria-describedby="helpId" 
+                    pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"
+                    placeholder="Ejem. (usuario@gmail.com)" 
+                    value="<?php if (isset($_POST['CorreoElectronico'])) echo $_POST['CorreoElectronico'];?>" >
             </div>
 
 
             <div class="mb-3">
                 <label for="" class="form-label"></label>
-                <select class="form-control" name="TipoEmpleado" id="TipoEmpleado">
+                <label for="" class="form-label">Tipo empleado:</label>
+                <select class="form-control" name="TipoEmpleado" id="TipoEmpleado" >
                     <option>Barnizador</option>
                     <option>Pulidor</option>
                     <option>Colocador</option>
                     <option>Fabricador</option>
+                    <option  selected="selected"  value="<?php if (isset($_POST['TipoEmpleado'])) echo $_POST['TipoEmpleado'];?>"><?php if (isset($_POST['TipoEmpleado'])) echo $_POST['TipoEmpleado'];?> </option>
                 </select>
             </div>
 

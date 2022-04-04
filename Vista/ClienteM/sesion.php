@@ -92,8 +92,8 @@ document.title = "Datos cliente";
             </div>
 
             <div class="mb-3">
-                <label for="" class="form-label">Contraseña:</label>
-                <input required="" type="text" value="<?php echo $Cliente->Contrasena?>" class="form-control"
+                
+                <input required="" readonly type="hidden" value="<?php echo $Cliente->Contrasena?>" class="form-control"
                     name="Contrasena" id="Contrasena" aria-describedby="helpId" placeholder="Contraseña">
             </div>
 
@@ -131,9 +131,20 @@ document.title = "Datos cliente";
     <div class="card-header"> </div>
     <div class="card-body">
         <h5 class="card-title">Detalles</h5>
-        <p class="card-text"><?php echo $cita[0]?></p>
-        <p class="card-text"><?php echo $cita[1]?></p>
-        <p class="card-text"><?php echo $cita[2]?></p>
+        <?php 
+        if(empty($cita)){
+            echo 'No hay cita';
+        }else{ 
+        ?>
+
+        <p class="card-text"><?php echo $cita[0]; ?></p>
+        <p class="card-text"><?php echo $cita[1]; ?></p>
+        <p class="card-text"><?php echo $cita[2]; ?></p>
+
+        <?php 
+
+        }
+        ?>
     </div>
 </div>
 
@@ -181,7 +192,7 @@ document.title = "Datos cliente";
                 <td><?php echo $prod->FolioApartado; ?> </td>
                 <td><?php echo $prod->Fecha;?> </td>
                 <td><?php echo $prod->FechaVencimiento;?> </td>
-                <td><?php echo $prod->PrecioTotal;?> </td>
+                <td>$<?php echo $prod->PrecioTotal;?> </td>
 
                 <td>
                     <div class="btn-group" role="group" aria-label="">

@@ -7,9 +7,8 @@ class Basededatos{
 
         if(!isset(self::$instancia)){
             $opcionesPDO[PDO::ATTR_ERRMODE]= PDO::ERRMODE_EXCEPTION;
-
-            self::$instancia= new PDO('mysql:host=localhost;dbname=BD02;charset=utf8mb4','root','',$opcionesPDO);
-          //  echo"Exito en la conexión";
+            /*Se crea la instancia PDO para la conexión ingresando el nombre de la base de datos, usuario, y contraseña*/
+            self::$instancia=new PDO('mysql:host=localhost;dbname=bd02;charset=utf8mb4','root','',$opcionesPDO);
         }
 
         return self::$instancia;

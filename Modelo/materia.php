@@ -1,5 +1,5 @@
 <?php
-
+/*La clase Materia tiene la principal función de realizar el CRUD para materia prima. */
 class Materia{
 
     public $FolioMat;
@@ -29,6 +29,7 @@ class Materia{
         
     }
 
+    /*Busca todos los datos de la tabla catalogoMateriaPrima */
     public static function mostrar(){
         $listaMateria=[];
         $conexion=BasedeDatos::CreateInstancia();
@@ -46,25 +47,26 @@ class Materia{
         return $listaMateria;
     }
      
+    /*Ingresa los datos de la materia prima validando que tanto el nombre y la suscursal no sean iguales y devolviendo mensajes de exito o error */
     public static function crear($NombreMat, $NombreSuc, $MedidasMat, $TipoMadera,$CantidadMat,$PrecioMat){
-        
         $conexion=Basededatos::CreateInstancia();
-        
         $sql= $conexion->prepare("SELECT * FROM catalogomateriaprima WHERE NombreMat=? && NombreSuc=?");
         $sql->execute(array($NombreMat, $NombreSuc));
         $materia=$sql->fetch();
 
-        if((strcmp ($NombreMat , $materia['NombreMat']) == 0) && (strcmp ($NombreSuc , $materia['NombreSuc']) == 0))
+        if( empty($materia['NombreMat'])   &&  empty($materia['NombreSuc']) )
         {
-            echo "<div class='container2'><span class='estiloError'>$NombreMat ya se encuentra Registrado</span></div>";
-        }else{
         $sql= $conexion->prepare("INSERT into catalogomateriaprima(NombreMat, NombreSuc, MedidasMat, TipoMadera,CantidadMat,PrecioMat) values(?,?,?,?,?,?)");
         $sql->execute(array($NombreMat, $NombreSuc, $MedidasMat, $TipoMadera,$CantidadMat ,$PrecioMat ));
         echo "<div class='container3'>
         <span class='estiloExito'>Registrado Exitoso de: $NombreMat </span></div>";
-    }
+        }else{
+        echo "<div class='container2'><span class='estiloError'>$NombreMat ya se encuentra Registrado</span></div>";
+        return 1;
+        }
     }
 
+    /*busca a una materia prima por su folio */
     public static function buscar($FolioMat){
         $conexion=Basededatos::CreateInstancia();
         $sql= $conexion->prepare("SELECT * FROM catalogomateriaprima WHERE FolioMat=?");
@@ -72,7 +74,6 @@ class Materia{
         $materia=$sql->fetch();
         return new Materia(
         $materia['FolioMat'],
-        $materia['FolioAdmin'],
         $materia['NombreMat'], 
         $materia['NombreSuc'], 
         $materia['MedidasMat'],
@@ -81,8 +82,8 @@ class Materia{
         $materia['PrecioMat']);
     }
 
-    public static function editar($FolioMat,$NombreMat, $NombreSuc, $MedidasMat, $TipoMadera,$CantidadMat,$PrecioMat){
-        
+    /*Actualiza la tabla de catalogo materia prima */
+    public static function editar($FolioMat,$NombreMat, $NombreSuc, $MedidasMat, $TipoMadera,$CantidadMat,$PrecioMat){  
         $conexion=Basededatos::CreateInstancia(); 
         $sql= $conexion->prepare("UPDATE  catalogomateriaprima SET  NombreMat=?, NombreSuc=?, MedidasMat=?, TipoMadera=?, CantidadMat=?, PrecioMat=? WHERE FolioMat=?");
         $sql->execute(array($NombreMat, $NombreSuc, $MedidasMat, $TipoMadera,$CantidadMat,$PrecioMat, $FolioMat));
@@ -90,6 +91,7 @@ class Materia{
         <span class='estiloExito'>Actualización Exitosa </span></div>";
     }
 
+    /*Elimina a una materia prima por su folio */
     public static function borrar($FolioMat){
         $conexion=Basededatos::CreateInstancia();
         $sql= $conexion->prepare("DELETE FROM catalogomateriaprima WHERE FolioMat=?");

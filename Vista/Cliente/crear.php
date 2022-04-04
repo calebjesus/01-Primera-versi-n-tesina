@@ -8,7 +8,7 @@
         }
     }
 
-    var_dump($_SESSION['id']);
+    
 ?>
 <script>
 document.title = "Crear cliente";
@@ -24,50 +24,60 @@ document.title = "Crear cliente";
             <div class="mb-3">
                 <label for="" class="form-label">Nombre:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="NombreClien" id="NombreClien" aria-describedby="helpId" placeholder="Nombre del cliente">
+                    name="NombreClien" id="NombreClien" aria-describedby="helpId" placeholder="Nombre del cliente"
+                    value="<?php if (isset($_POST['NombreClien'])) echo $_POST['NombreClien'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Apellido paterno:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="APClien" id="APClien" aria-describedby="helpId" placeholder="Apellido paterno">
+                    name="APClien" id="APClien" aria-describedby="helpId" placeholder="Apellido paterno"
+                    value="<?php if (isset($_POST['APClien'])) echo $_POST['APClien'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Apellido materno:</label>
                 <input type="text" required="" onkeypress="return soloLetras(event);" class="form-control"
-                    name="AMClien" id="AMClien" aria-describedby="helpId" placeholder="Apellido materno">
+                    name="AMClien" id="AMClien" aria-describedby="helpId" placeholder="Apellido materno"
+                    value="<?php if (isset($_POST['AMClien'])) echo $_POST['AMClien'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Ingresa la fecha de nacimiento:</label>
                 <input type="date" required="" class="form-control" name="FechaNacimiento" id="FechaNacimiento"
-                    aria-describedby="helpId" placeholder="Fecha">
+                    aria-describedby="helpId" placeholder="Fecha" 
+                    value="<?php if (isset($_POST['FechaNacimiento'])) echo $_POST['FechaNacimiento'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Teléfono:</label>
                 <input type="text" onkeypress="return valideKey(event);" required="" minlength="10" maxlength="10"
-                    class="form-control" name="Telefono" id="Telefono" aria-describedby="helpId" placeholder="Teléfono">
+                    class="form-control" name="Telefono" id="Telefono" aria-describedby="helpId" placeholder="Teléfono"
+                    value="<?php if (isset($_POST['Telefono'])) echo $_POST['Telefono'];?>" >
             </div>
 
 
             <div class="mb-3">
                 <label for="" class="form-label">Dirección:</label>
                 <input type="text" required="" class="form-control" name="Direccion" id="Direccion"
-                    aria-describedby="helpId" placeholder="Dirección">
+                    aria-describedby="helpId" placeholder="Dirección"
+                    value="<?php if (isset($_POST['Direccion'])) echo $_POST['Direccion'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Correo electrónico:</label>
-                <input type="text" required="" class="form-control" name="CorreoElectronico" id="CorreoElectronico"
-                    aria-describedby="helpId" placeholder="Ejem. (usuario@gmail.com)">
+                <input type="email"
+                pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" 
+                required="" class="form-control" name="CorreoElectronico" id="CorreoElectronico"
+                    aria-describedby="helpId" placeholder="Ejem. (usuario@gmail.com)"
+                    value="<?php if (isset($_POST['CorreoElectronico'])) echo $_POST['CorreoElectronico'];?>" >
             </div>
 
             <div class="mb-3">
                 <label for="" class="form-label">Contraseña:</label>
                 <input type="password" autocomplete="off" required="" class="form-control" name="Contrasena"
-                    id="Contrasena" aria-describedby="helpId" placeholder="Contraseña">
+                    id="Contrasena" aria-describedby="helpId" placeholder="Contraseña"
+                    value="<?php if (isset($_POST['Contrasena'])) echo $_POST['Contrasena'];?>" >
             </div>
 
 

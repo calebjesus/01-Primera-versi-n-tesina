@@ -26,11 +26,7 @@ document.title = "Actualizar materia prima";
                     id="FolioMat" aria-describedby="helpId" placeholder="Folio">
             </div>
 
-            <div class="mb-3">
-                <label for="" class="form-label">Folio Administrador</label>
-                <input readonly type="text" class="form-control" value="<?php echo $materia->FolioAdmin?>"
-                    name="FolioAdmin" id="FolioAdmin" aria-describedby="helpId" placeholder="Folio">
-            </div>
+            
 
 
             <div class="mb-3">

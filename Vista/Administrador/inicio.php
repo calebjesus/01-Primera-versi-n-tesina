@@ -1,5 +1,4 @@
 <?php  
-    session_start();
     if(!isset($_SESSION['rol'])){
         header("Location: http://localhost/CarpinteriaGral/?controlador=Login&accion=inicio");
     }else{
@@ -64,11 +63,7 @@ document.title = "Inicio Administrador"; // Cambiamos el título
       </div>
     </div>
   </div>
-
 <br>
-<br>
-
-
 <div class="card">
   <div class="card-body">
   <br>
@@ -85,7 +80,7 @@ document.title = "Inicio Administrador"; // Cambiamos el título
                             <th>A. Paterno</th>
                             <th>A. Materno</th>
                             <th>E-mail</th>
-                            <th>Contraseña</th>
+                           
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -99,11 +94,11 @@ document.title = "Inicio Administrador"; // Cambiamos el título
                             <td><?php echo $admin->APAdmin;?> </td>
                             <td><?php echo $admin->AMAdmin;?> </td>
                             <td><?php echo $admin->CorreoElectronico;?> </td>
-                            <td><?php echo $admin->Contrasena;?> </td>
+                            
                             <td>
                                 <div class="btn-group" role="group" aria-label="">
                                     <a href="?controlador=administrador&accion=borrar&FolioAdmin=<?php echo $admin->FolioAdmin; ?>"
-                                        class="btn btn-danger">Borrar</a>
+                                        class="btn btn-danger" onclick="return ConfirmDelete()">Borrar</a>
                                     <a href="?controlador=administrador&accion=editar&FolioAdmin=<?php echo $admin->FolioAdmin; ?>"
                                         class="btn btn-info">Actualizar</a>
                                 </div>
@@ -119,5 +114,121 @@ document.title = "Inicio Administrador"; // Cambiamos el título
                 </table>
     </div>
 </div>
+<br>
+<div class="card">
+    <div class="card-body">
+    <h5 class="display-1">Cifrar contraseñas</h5>
+        <form method="post" >
+        <div class="mb-3">
+                        <label for="" class="form-label">Ingresa la contraseña a cifrar</label>
+                        <input type="text" required="" class="form-control" name="contraseña" id="contraseña" aria-describedby="helpId" placeholder="contraseña">
+                        <br>
+                        <label for="" class="form-label">Contraseña cifrada</label>
+                        <input readonly  value="<?php echo $contraseñaHash?>" class="form-control" name="contraseña_cifrada" id="contraseña_cifrada" aria-describedby="helpId" placeholder="">
+                    </div>
+                    <input action="" class="btn btn-success" type="submit" value="Cifrar">
+        </form>
+    </div>
+</div>
+
+
+<br>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tile">
+                    <div
+                        style="display: flex;    flex-direction: column;    justify-content: center;    align-items: center;">
+                        <h5 class="display-1">Calculadora</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <form method="post">
+            <select id="folio_materia_prima" name="folio_materia_prima" class="form-select"
+                aria-label="Default select example">
+                <option value="">Seleciona el producto</option>
+                <?php
+                                foreach($productos as $producto){
+                                    echo "<option value=$producto->folioprod >".$producto->folioprod." ".$producto->nombreprod."/  ".$producto->categoria."</option>";
+                                }
+                            ?>
+            </select>
+            <br>
+            <div class="mb-3">
+                <label for="" class="form-label">Cantidad:</label>
+                <input type="text" onkeypress="return valideKey(event);" required="" class="form-control"
+                    name="cantidad" id="cantidad" aria-describedby="helpId" placeholder="Cantidad">
+            </div>
+            <input action="" class="btn btn-success" type="submit" value="Buscar">
+
+        </form>
+        <br>
+        <table id="" class="table table-hover" style="width:100%">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Coste unitario</th>
+                    <th>Coste/material</th>
+                    <th>Cantidad</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                    $cont=0;
+                        foreach ($mostrar_calculadora as $m_c){
+                            $cont+=$m_c->precio;
+                            ?>
+                <tr>
+                    <td><?php echo $m_c->producto; ?> </td>
+                    <td>$ <?php echo $m_c->costeunitario; ?> </td>
+                    <td>$ <?php echo $m_c->precio;?> </td>
+                    <td><?php echo $m_c->cantidad;?> </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="">
+                            <a href="?controlador=administrador&accion=eliminar_folio_calculadora&idcalculadora=<?php echo $m_c->idcalculadora; ?>"
+                                class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </td>
+                </tr>
+
+                <?php }?>
+
+
+            </tbody>
+        </table>
+
+        <br>
+    </div>
+</div>
+<div class="card text-white bg-success mb-12" style="max-width: 100rem;">
+    <div class="card-header">Precio total:</div>
+    <div class="card-body">
+        <h5 class="card-title"> $ <?php echo($cont);?></h5>
+        <div class="btn-group" role="group" aria-label="">
+            <a href="?controlador=administrador&accion=eliminar_todo&id_administrador=<?php echo $_SESSION['id']; ?>"
+                class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+</div>
+
+
 <input type="hidden" id="SesionRol" value="<?php echo $_SESSION['rol'] ?>">
 <script src="Herramientas/JS/navBar.js"></script>
+
+<script type="text/javascript">
+    function ConfirmDelete() {
+        var respuesta = confirm("¿Estás seguro de eliminar?");
+        if(respuesta == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
+    }
+
+</script>

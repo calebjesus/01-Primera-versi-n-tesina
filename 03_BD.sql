@@ -3,6 +3,21 @@ drop database bd02;
 create database BD02;
 use BD02;
 
+create table inicio(
+id int not null primary key auto_increment,
+direccion text not null,
+telefono1 text not null,
+telefono2 text not null,
+correoelectroncio text not null
+);
+ALTER TABLE inicio AUTO_INCREMENT=000;
+
+create table municipios(
+idm int not null primary key auto_increment,
+municipio text not null,
+estado  text not null
+);
+ALTER TABLE municipios AUTO_INCREMENT=000;
 
 create table CatalogoEmpleado(
 IdEmpleados INT NOT NULL primary key auto_increment,
@@ -29,7 +44,7 @@ Nombre VARCHAR(45) NOT NULL,
 APAdmin VARCHAR(45) NOT NULL,
 AMAdmin VARCHAR(45) NOT NULL,
 CorreoElectronico VARCHAR(45) NOT NULL,
-Contrasena VARCHAR(45) NOT NULL,
+Contrasena CHAR(60) NOT NULL,
 CONSTRAINT rol_jk FOREIGN KEY (folio)
 REFERENCES roles(folio)
 ON DELETE CASCADE
@@ -66,7 +81,7 @@ FechaNacimiento DATE NOT NULL,
 Telefono VARCHAR(45) NOT NULL,
 Direccion TEXT NOT NULL,
 CorreoElectronico VARCHAR(45) NOT NULL,
-Contrasena VARCHAR(45) NOT NULL,
+Contrasena CHAR(60) NOT NULL,
 CONSTRAINT rol_Cl FOREIGN KEY (folio)
 REFERENCES roles(folio)
 ON DELETE CASCADE
@@ -227,6 +242,17 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 )ENGINE = InnoDB;
 ALTER TABLE PhCh AUTO_INCREMENT=000;
+/*---------------------------------------------------------------------*/
+create table inicio_sesion(
+folio int NOT NULL primary key auto_increment,
+folioadmin int not null,
+fechainicio datetime not null,
+CONSTRAINT inicio_sesion_Administradores FOREIGN KEY (folioadmin)
+REFERENCES catalogoadministrador(folioadmin)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+)ENGINE = InnoDB;
+ALTER TABLE inicio_sesion AUTO_INCREMENT=000;
 /*---------------------------------------------------------------------*/
 
 select * from roles;

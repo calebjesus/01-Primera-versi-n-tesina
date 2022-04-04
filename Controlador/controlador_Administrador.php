@@ -7,7 +7,8 @@
   </symbol>
   <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-  </symbol></svg>
+  </symbol>
+</svg>
 
 <?php
 include_once("conexion.php");
@@ -18,58 +19,75 @@ Basededatos::CreateInstancia();
 
 class ControladorAdministrador{
 
+  //Index muestra el template del administrador
     public function index(){ 
         require_once("Vista/Administrador/template.php");       
     }
+    //Es la vista principal del administrador
     public function inicio(){ 
+      $admins=Administrador::mostrar();
+      $productos = Administrador::mostrar_productos();
+      session_start();
+      $id_administrador=$_SESSION['id'];
+      $dbHost="localhost";
+      $dbUsername="root";
+      $dbPassword="";
+      $dbName="bd02";
+      $contraseñaHash="";
 
-      
-        $admins=Administrador::mostrar(); 
-        
-        $dbHost="localhost";
-        $dbUsername="root";
-        $dbPassword="";
-        $dbName="bd02";
-        
-        
-        if(!empty($_POST['respaldo'])){
-          $respaldo=$_POST['respaldo'];
-          if($respaldo==1){
-            Administrador::respaldo_bd($dbHost,  $dbUsername,$dbPassword, $dbName);
-              echo('<div class="alert alert-success d-flex align-items-center" role="alert">
-              <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-              <div>
-              ¡Éxito, se ha creado el respaldo de la base de datos!
-              </div>
-              </div>');
+      if(!empty($_POST['contraseña'])){
+        $contraseña=$_POST['contraseña'];
+        $contraseñaHash = password_hash($contraseña, PASSWORD_DEFAULT);
+      }
+
+
+      if(!empty($_POST['respaldo'])){
+        $respaldo=$_POST['respaldo'];
+        if($respaldo==1){
+          Administrador::respaldo_bd($dbHost,$dbUsername,$dbPassword, $dbName);
+            echo('<div class="alert alert-success d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+            ¡Éxito, se ha creado el respaldo de la base de datos!
+            </div>
+            </div>');
+        }
+      }
+      if(!empty($_POST['Recuperar'])){
+        $Recuperar=$_POST['Recuperar'];
+        if($Recuperar==2){
+          $file=$_POST['file'];
+          $direccion="../CarpinteriaGral/respaldos/".$file;
+          Administrador::restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $direccion);
+            echo('<div class="alert alert-success d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+            ¡Éxito, se ha creado la recuperación de la base de datos!
+            </div>
+            </div>');
+        }
+      }
+
+        if(!empty($_POST['cantidad'])){
+          $folio_producto = $_POST['folio_materia_prima'];
+          $cantidad = $_POST['cantidad'];
+          //trae el precio de la tabla calculadora
+          $tabla_productos = Administrador::producto_precio_insumos($folio_producto);
+          //Verifica la existencia de id producto en calculadora
+          $verificar=Administrador::verificar_existencia_producto($folio_producto,$id_administrador);
+          
+          if(!empty($verificar)){
+              Administrador::actualizar_cantidad_calculadora($cantidad,$folio_producto,$id_administrador);
+          }else{
+              foreach ($tabla_productos as $tabla_producto){
+              Administrador::insertar_calculadora($cantidad,$folio_producto,$id_administrador,$tabla_producto->precio_insumo);
+              }
           }
         }
-
-                 
-          if(!empty($_POST['Recuperar'])){
-            
-
-          $Recuperar=$_POST['Recuperar'];
-        
-          if($Recuperar==2){
-            
-            $file=$_POST['file'];
-
-            $direccion="../CarpinteriaGral/respaldos/".$file;
-
-            Administrador::restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $direccion);
-              echo('<div class="alert alert-success d-flex align-items-center" role="alert">
-              <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-              <div>
-              ¡Éxito, se ha creado la recuperación de la base de datos!
-              </div>
-              </div>');
-          }
-        
-  
-        }
-        include_once("Vista/Administrador/inicio.php");
+      $mostrar_calculadora=Administrador::mostrar_calculadora($id_administrador);
+      include_once("Vista/Administrador/inicio.php");
     }
+    //Crear realiza la operación para insertar un administrador 
     public function crear(){      
         if($_POST){
             $Nombre=$_POST['Nombre'];
@@ -77,21 +95,27 @@ class ControladorAdministrador{
             $AMAdmin=$_POST['AMAdmin'];
             $CorreoElectronico=$_POST['CorreoElectronico'];
             $Contrasena=$_POST['Contrasena'];
+            $contraseñaHash = password_hash($Contrasena, PASSWORD_DEFAULT); 
+
             $folio=1;
-            Administrador::crear($Nombre, $APAdmin, $AMAdmin, $CorreoElectronico, $Contrasena,$folio);
-        }
+            if(Administrador::crear($Nombre, $APAdmin, $AMAdmin, $CorreoElectronico, $contraseñaHash,$folio)!=1){
+              $_POST['Nombre']=null;
+              $_POST['APAdmin']=null;
+              $_POST['AMAdmin']=null;
+              $_POST['CorreoElectronico']=null;
+              $_POST['Contrasena']=null;
+            }
+          }
         include_once("Vista/Administrador/crear.php");
     }
-
+    //Borrar toma el folio del administrador para despues enviar al modelo donde se realizará la eliminación
     public function borrar(){
-        //print_r($_GET);
-        //validar si existe, si es entero, si es dato
         $FolioAdmin=$_GET['FolioAdmin'];
         Administrador::borrar($FolioAdmin);
         //Redireccion sin nesecidad de que aparezca una pantalla en blanco.
         header("Location:./?controlador=administrador&accion=inicio");
     }
-
+    //Editar envía los datos a la vista y esta devuelve los datos modificados, para despues enviarlos al modelo
     public function editar(){
         if($_POST){
             $FolioAdmin=$_POST['FolioAdmin'];
@@ -100,115 +124,102 @@ class ControladorAdministrador{
             $APAdmin=$_POST['APAdmin'];
             $CorreoElectronico=$_POST['CorreoElectronico'];
             $Contrasena=$_POST['Contrasena'];
+            $nombretabla="catalogoadministrador";
+            if(Administrador::verificar_correo_folio('catalogoadministrador',$CorreoElectronico,'FolioAdmin',$FolioAdmin)==1){
+              echo('
+             <div class="alert alert-warning d-flex align-items-center" role="alert">
+             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+             <div>
+             ¡Ya está registrado el correo, intenta con otro!
+             </div>
+             </div>');
+           }else{
             Administrador::editar($FolioAdmin,$Nombre, $APAdmin, $AMAdmin, $CorreoElectronico, $Contrasena);
-            
+           }
         }
         $FolioAdmin=$_GET['FolioAdmin'];
         $admin=(Administrador::buscar($FolioAdmin));
         include_once("Vista/Administrador/editar.php");
     }
-    
+    //Inicio administrador tiene los reportes
     public function inicio_administrador(){
 
-        $datos = Administrador::clientes_frecuentes();
-        $datos_productos = Administrador::productos_mas_vendidos();
-        $fechas_distintas = Administrador::traer_fechas_distintas();
-        $meses_distintos = Administrador::traer_meses_distintas();
-        $productos = Administrador::mostrar_productos();
-        session_start();
-        $id_administrador=$_SESSION['id'];
-        
-
-        $anual=[];
-        $mes=[];
-        $materiales=[];
-        $folio_producto=0;
-      
-
-        if(!empty($_POST['anio'])){
-          $anio=$_POST['anio'];
-          $mes=$_POST['mes'];
-          
-          if($anio==null && $mes!=null ){
-              echo('
-              <div class="alert alert-danger d-flex align-items-center" role="alert">
-              <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-              <div>
-              ¡Para el reporte de mes debes escoger el año!
-              </div>
-              </div>');
+        $datos = Administrador::clientes_frecuentes(5);
+        $datos_productos = Administrador::productos_mas_vendidos(5);
+        $datos_inicio_sesiones = Administrador::inicio_sesiones();
+        if($_POST){
+          if(!empty($_POST['cantidad'])){
+          $cantidad=$_POST['cantidad'];
+          $datos = Administrador::clientes_frecuentes($cantidad);
           }
-
-          if($anio!=null && $mes!=null){
-            $anual = Administrador::reporte_mensual($anio,$mes);
-          }
-
-          if($anio!=null && $mes==null){
-          $anual = Administrador::reporte_anual($anio);
+          if(!empty($_POST['CantidadMat'])){
+          $CantidadMat=$_POST['CantidadMat'];
+          $datos_productos = Administrador::productos_mas_vendidos($CantidadMat);
           }
         }
-
-        
-        if(!empty($_POST['cantidad'])){
-              $folio_producto = $_POST['folio_materia_prima'];
-              $cantidad = $_POST['cantidad'];
-              //trae el precio de la tabla calculadora
-              $tabla_productos = Administrador::producto_precio_insumos($folio_producto);
-              //Verifica la existencia de id producto en calculadora
-              $verificar=Administrador::verificar_existencia_producto($folio_producto);
-              
-              if(!empty($verificar)){
-              
-                Administrador::actualizar_cantidad_calculadora($cantidad,$folio_producto);
-              
-            }else{
-                foreach ($tabla_productos as $tabla_producto){
-                Administrador::insertar_calculadora($cantidad,$folio_producto,$id_administrador,$tabla_producto->precio_insumo);
-                }
-               
-            }
-        }
-        $mostrar_calculadora=Administrador::mostrar_calculadora();
-
-
-        
-
-            include_once("Vista/AdministradorM/inicio.php");
+        include_once("Vista/AdministradorM/inicio.php");
     }
-
-    public function reporte_busqueda_materia_prima(){
-      session_start();
-      $datos = Administrador::clientes_frecuentes();
-      $datos_productos = Administrador::productos_mas_vendidos();
+    //anual_mensual es el repote mensual
+    public function anual_mensual(){
       $fechas_distintas = Administrador::traer_fechas_distintas();
-        $meses_distintos = Administrador::traer_meses_distintas();
-      $productos = Administrador::mostrar_productos();
-      $mostrar_calculadora=Administrador::mostrar_calculadora();
+      $meses_distintos = Administrador::traer_meses_distintas();
 
       $anual=[];
       $mes=[];
       $materiales=[];
-      $mostrar_calculadora=[];
+      $folio_producto=0;
+        
+      if(!empty($_POST['mes'])){
+        $anio=$_POST['anio'];
+        $mes=$_POST['mes'];
+        
+        if($anio==null && $mes!=null ){
+            echo('
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+            ¡Para el reporte de mes debes escoger el año!
+            </div>
+            </div>');
+        }
+      }
+      if(!empty($_POST['anio'])){
+        $anio=$_POST['anio'];
+        $mes=$_POST['mes'];
+
+        if($anio!=null && $mes!=null){
+          $anual = Administrador::reporte_mensual($anio,$mes);
+        }
+
+        if($anio!=null && $mes==null){
+        $anual = Administrador::reporte_anual($anio);
+        }
+      }
+      include_once("Vista/AdministradorM/anual_mensual.php");
+    }
+    //Reporte_busqueda_materia_prima realiza la busqueda por medio del nombre de alguna materia prima
+    public function reporte_busqueda_materia_prima(){
+      session_start();
+      $materiales=[];
       if($_POST){
         $nombremateria=$_POST['nombremateria'];
         $materiales=Administrador::reporte_materia_prima($nombremateria);
       }
-
-      include_once("Vista/AdministradorM/inicio.php");
+      include_once("Vista/AdministradorM/evaluacion_materias_primas.php");
     }
-
+    //Eliminar_folio_calculadora Elimina una tupla de datos siendo los insumos por productos
     public function eliminar_folio_calculadora(){
       $idcalculadora=$_GET['idcalculadora'];
       Administrador::borrar_fila_calculadora($idcalculadora);
       header("Location:./?controlador=administrador&accion=inicio_administrador");
     }
-
+    //eliminar_todo elimina todo de la calculadora del administrador
     public function eliminar_todo(){
       $id_administrador=$_GET['id_administrador'];
       Administrador::eliminar_todo($id_administrador);
       header("Location:./?controlador=administrador&accion=inicio_administrador");
     }
-
+    //desactivar_prestamo cambia el estado de prestamo de herramientas
     public function desactivar_prestamo(){
       $idPh=$_GET['idPh'];
       
@@ -218,7 +229,7 @@ class ControladorAdministrador{
       include_once("Vista/AdministradorM/inicio_prestaciones.php");
       header("Location:./?controlador=Administrador&accion=inicio_prestaciones");
     }
-     
+    //activar_prestamo cambia el estado del prestamo de herramientas
     public function activar_prestamo(){
       $idPh=$_GET['idPh'];
       
@@ -228,7 +239,7 @@ class ControladorAdministrador{
       include_once("Vista/AdministradorM/inicio_prestaciones.php");
       header("Location:./?controlador=Administrador&accion=inicio_prestaciones");
     }
-
+    //Ingresa el nombre del empleado a realizar el prestamo
     public function inicio_prestaciones(){
         $datos_empleados=Administrador::mostrar_empleados();
         $tabla_prestacion_herramienta=Administrador::mostrar_prestacion_herramientas();
@@ -292,7 +303,7 @@ class ControladorAdministrador{
         
       include_once("Vista/AdministradorM/crear_prestacion.php");
     } 
-
+    //asignar_herramienta realiza el prestamo de herramientas para cada empleado
     public function asignar_herramienta(){
 
       $idPh=$_GET['idPh'];
@@ -452,8 +463,13 @@ class ControladorAdministrador{
         $catalogo_herramientas=Herramientas::mostrar();
       include_once("Vista/AdministradorM/asignar_herramienta.php");
     }
-    
-  
+
+    public function generar_contraseñas(){
+      
+      
+      include_once("Vista/Administrador/inicio.php");
+    }
+
     }
 
 

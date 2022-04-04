@@ -36,7 +36,7 @@ document.title = "Asignar herramientas"; // Cambiamos el título
                         <td><?php echo $phch->cantidad;?></td>
                         <td>
                             <form  method="post" enctype="multipart/form-data">           
-                                <input type="number" value="" class="form-control" name="cantidad" id="cantidad" aria-describedby="helpId" style="width : 100px; heigth : 1px">
+                                <input type="number"  min="1" value="" class="form-control" name="cantidad" id="cantidad" aria-describedby="helpId" style="width : 100px; heigth : 1px">
                                 <input type="hidden" value="<?php echo $phch->cantidad;?>" class="form-control" name="cantidad_vieja" id="cantidad_vieja" >
                                 <input type="hidden" value="<?php echo $phch->idPhch;?>" class="form-control" name="idPhch_actualizar" id="idPhch_actualizar" >
                                 <input type="hidden" value="<?php echo $phch->folioherra;?>" class="form-control" name="folio_herramienta_actualizar" id="folio_herramienta_actualizar" aria-describedby="helpId">
@@ -47,7 +47,7 @@ document.title = "Asignar herramientas"; // Cambiamos el título
 
                         <td>
                             <form  method="post" enctype="multipart/form-data">           
-                                <input  type="number" value="" class="form-control" name="cantidad_extravio" id="cantidad_extravio"  style="width : 100px; heigth : 1px">
+                                <input  type="number" min="1" value="" class="form-control" name="cantidad_extravio" id="cantidad_extravio"  style="width : 100px; heigth : 1px">
                                 <input type="hidden" value="<?php echo $phch->idPhch;?>" class="form-control" name="idPhch_extravio" id="idPhch_extravio" >
                                 <input type="hidden" value="<?php echo $phch->cantidad;?>" class="form-control" name="cantidad_vieja_extravio" id="cantidad_vieja_extravio" >
                                 <input class="btn btn-warning" type="submit" value="Ingresar extravíos" onclick="return ConfirmUpdateextravios()">
